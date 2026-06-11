@@ -194,8 +194,6 @@ def edit_mode_UI():
                 print_timetable(timetabledata)
                 print(message)
 
-def edit_data():
-    pass
 
 """ <- THE CODE FOR THE TIMETABLE FUNCTION ENDS HERE ->"""
 
