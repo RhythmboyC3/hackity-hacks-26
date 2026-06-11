@@ -1,18 +1,49 @@
 import os
 import subprocess
-from unittest import case
-import pandas as pd 
+import pandas as pd
 from time import sleep
+
+CSV_PATH = "timetabledata.csv"
+DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+cellwidth = 11
+tablewidth = cellwidth * len(DAYS)
+
+# Attempt to import the GUI launcher. If tkinter is unavailable, the terminal UI still works.
+try:
+    from gui import launch_tkinter_gui
+    gui_available = True
+except (ImportError, ModuleNotFoundError):
+    launch_tkinter_gui = None
+    gui_available = False
 
 # Notes:
 # If you intend to call another function, return or else the 1st function still runs
 
-# Begin declarations
-timetabledata = pd.read_csv('timetabledata.csv', dtype=object).fillna("")
 
-cellwidth = 11
-tablewidth = cellwidth * 7
-#print(timetabledata.to_string(index=False))
+def load_timetable():
+    if not os.path.exists(CSV_PATH):
+        data = {
+            "Monday": ["", "", "", "", ""],
+            "Tuesday": ["", "", "", "", ""],
+            "Wednesday": ["", "", "", "", ""],
+            "Thursday": ["", "", "", "", ""],
+            "Friday": ["", "", "", "", ""],
+            "Saturday": ["", "", "", "", ""],
+            "Sunday": ["", "", "", "", ""],
+        }
+        pd.DataFrame(data).to_csv(CSV_PATH, index=False)
+    return pd.read_csv(CSV_PATH, dtype=object).fillna("")
+
+
+def save_timetable(datatable):
+    datatable.to_csv(CSV_PATH, index=False)
+
+
+def blank_timetable():
+    return {day: ["", "", "", "", ""] for day in DAYS}
+
+
+timetabledata = load_timetable()
 
 
 # Begin declaring functions and stuff
@@ -47,18 +78,8 @@ def handle_input():
                 if str(input("> ")).lower() == "c":
                     print("Clearing...")
                     sleep(1)
-                    data = {
-                        "Monday": ["", "", "" , "", ""],
-                        "Tuesday": ["", "", "" , "", ""],
-                        "Wednesday": ["", "", "" , "", ""],
-                        "Thursday": ["", "", "" , "", ""],
-                        "Friday": ["", "", "" , "", ""],
-                        "Saturday": ["", "", "" , "", ""],
-                        "Sunday": ["", "", "" , "", ""],
-                            }
-                    df = pd.DataFrame(data)
-                    df.to_csv("timetabledata.csv", index=False)
-                    timetabledata = pd.read_csv('timetabledata.csv', dtype=object).fillna("")
+                    pd.DataFrame(blank_timetable()).to_csv(CSV_PATH, index=False)
+                    timetabledata = load_timetable()
                     clear_terminal()
                     handle_input()
                     return
@@ -185,7 +206,7 @@ def edit_mode_UI():
                     edited = True
                     sleep(1)
                     clear_terminal()
-                    timetabledata.to_csv("timetabledata.csv", index=False)
+                    save_timetable(timetabledata)
                     handle_input()
                     return  
             case _:
@@ -200,7 +221,7 @@ def edit_mode_UI():
 """ <-- THIS IS THE MAIN MENU FUNCTION (Expand off the case here) ->"""
 def main_menu():
     clear_terminal()
-    message = "This is the main menu. Input 1 to go to Timetable Mode, q to quit."
+    message = "This is the main menu. Input 1 to go to Timetable Mode, 2 to open the GUI, q to quit."
     while True: 
         # Looks cool
         print(r""" ___       __   _______   ___       ________  ________  _____ ______   _______   ___       
@@ -221,14 +242,24 @@ def main_menu():
                 clear_terminal()
                 handle_input()
                 return
+            case "2":
+                if gui_available:
+                    print("Opening Tkinter GUI...")
+                    sleep(1)
+                    launch_tkinter_gui()
+                    return
+                clear_terminal()
+                print("Tkinter GUI is not available in this environment.")
+                sleep(1)
+                continue
             case "q":
                 print("Saving...")
-                timetabledata.to_csv("timetabledata.csv", index=False)
+                save_timetable(timetabledata)
                 sleep(1)
                 print("Bye!")
                 quit()
             case _:
-                message = "Invalid command. Input 1 to go to Timetable Mode, q to quit."
+                message = "Invalid command. Input 1 to go to Timetable Mode, 2 to open the GUI, q to quit."
                 clear_terminal()
 
 main_menu()
