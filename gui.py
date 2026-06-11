@@ -5,7 +5,7 @@ CSV file, with a polished main menu screen that is ready for additional features
 """
 
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, ttk
 import pandas as pd
 
 CSV_PATH = "timetabledata.csv"
@@ -52,6 +52,38 @@ class TimetableApp(tk.Tk):
         self.configure(bg=BG_DARK)
         self.resizable(False, False)
 
+        self.style = ttk.Style(self)
+        try:
+            self.style.theme_use("clam")
+        except tk.TclError:
+            pass
+        self.style.configure(
+            "Primary.TButton",
+            background=BG_SECONDARY,
+            foreground=TEXT_PRIMARY,
+            borderwidth=0,
+            focusthickness=0,
+            padding=8,
+        )
+        self.style.map(
+            "Primary.TButton",
+            background=[("active", BORDER_DARK), ("disabled", BG_SECONDARY)],
+            foreground=[("disabled", TEXT_PRIMARY)],
+        )
+        self.style.configure(
+            "Danger.TButton",
+            background="#7f1d1d",
+            foreground=TEXT_PRIMARY,
+            borderwidth=0,
+            focusthickness=0,
+            padding=8,
+        )
+        self.style.map(
+            "Danger.TButton",
+            background=[("active", "#991b1b"), ("disabled", "#7f1d1d")],
+            foreground=[("disabled", TEXT_PRIMARY)],
+        )
+
         self.cells = []
         self.data_frame = load_data()
 
@@ -88,63 +120,30 @@ class TimetableApp(tk.Tk):
         button_frame = tk.Frame(card, bg=CARD_DARK)
         button_frame.pack(pady=(0, 24))
 
-        timetable_button = tk.Button(
+        timetable_button = ttk.Button(
             button_frame,
             text="📅 Open Timetable Editor",
             width=28,
-            height=2,
             command=lambda: self.show_frame("editor"),
-            font=("Segoe UI", 13, "bold"),
-            bg=BG_SECONDARY,
-            fg=TEXT_PRIMARY,
-            activebackground=BORDER_DARK,
-            activeforeground=TEXT_PRIMARY,
-            disabledforeground=TEXT_PRIMARY,
-            borderwidth=0,
-            relief="flat",
-            cursor="hand2",
-            highlightthickness=0,
-            highlightcolor=BG_SECONDARY,
+            style="Primary.TButton",
         )
         timetable_button.pack(pady=8)
 
-        other_button = tk.Button(
+        other_button = ttk.Button(
             button_frame,
             text="⚙️  Other Features (coming soon)",
             width=28,
-            height=2,
             command=self.on_other_feature,
-            font=("Segoe UI", 13),
-            bg=BG_SECONDARY,
-            fg=TEXT_PRIMARY,
-            activebackground=BORDER_DARK,
-            activeforeground=TEXT_PRIMARY,
-            disabledforeground=TEXT_PRIMARY,
-            borderwidth=0,
-            relief="flat",
-            cursor="hand2",
-            highlightthickness=0,
-            highlightcolor=BG_SECONDARY,
+            style="Primary.TButton",
         )
         other_button.pack(pady=8)
 
-        quit_button = tk.Button(
+        quit_button = ttk.Button(
             button_frame,
             text="❌ Quit",
             width=28,
-            height=2,
             command=self.destroy,
-            font=("Segoe UI", 13),
-            bg=BG_SECONDARY,
-            fg=TEXT_PRIMARY,
-            activebackground="#7f1d1d",
-            activeforeground=TEXT_PRIMARY,
-            disabledforeground=TEXT_PRIMARY,
-            borderwidth=0,
-            relief="flat",
-            cursor="hand2",
-            highlightthickness=0,
-            highlightcolor=BG_SECONDARY,
+            style="Primary.TButton",
         )
         quit_button.pack(pady=(16, 0))
 
@@ -156,22 +155,12 @@ class TimetableApp(tk.Tk):
         header_frame = tk.Frame(frame, bg=BG_DARK)
         header_frame.pack(fill="x", pady=(0, 20))
 
-        back_button = tk.Button(
+        back_button = ttk.Button(
             header_frame,
             text="← Back to Menu",
             width=14,
             command=lambda: self.show_frame("menu"),
-            font=("Segoe UI", 10),
-            bg=BG_SECONDARY,
-            fg=TEXT_PRIMARY,
-            activebackground=BORDER_DARK,
-            activeforeground=TEXT_PRIMARY,
-            disabledforeground=TEXT_PRIMARY,
-            borderwidth=0,
-            relief="flat",
-            cursor="hand2",
-            highlightthickness=0,
-            highlightcolor=BG_SECONDARY,
+            style="Primary.TButton",
         )
         back_button.pack(side="left")
 
@@ -256,79 +245,39 @@ class TimetableApp(tk.Tk):
         button_frame = tk.Frame(parent, bg=BG_DARK)
         button_frame.pack(pady=(8, 0))
 
-        save_button = tk.Button(
+        save_button = ttk.Button(
             button_frame,
             text="💾 Save",
             width=14,
             command=self.on_save,
-            font=("Segoe UI", 12, "bold"),
-            bg=BG_SECONDARY,
-            fg=TEXT_PRIMARY,
-            activebackground=BORDER_DARK,
-            activeforeground=TEXT_PRIMARY,
-            disabledforeground=TEXT_PRIMARY,
-            borderwidth=0,
-            relief="flat",
-            cursor="hand2",
-            highlightthickness=0,
-            highlightcolor=BG_SECONDARY,
+            style="Primary.TButton",
         )
         save_button.grid(row=0, column=0, padx=8, pady=8)
 
-        clear_button = tk.Button(
+        clear_button = ttk.Button(
             button_frame,
             text="🗑️  Clear All",
             width=14,
             command=self.on_clear,
-            font=("Segoe UI", 12),
-            bg="#7f1d1d",
-            fg=TEXT_PRIMARY,
-            activebackground="#991b1b",
-            activeforeground=TEXT_PRIMARY,
-            disabledforeground=TEXT_PRIMARY,
-            borderwidth=0,
-            relief="flat",
-            cursor="hand2",
-            highlightthickness=0,
-            highlightcolor="#7f1d1d",
+            style="Danger.TButton",
         )
         clear_button.grid(row=0, column=1, padx=8, pady=8)
 
-        reload_button = tk.Button(
+        reload_button = ttk.Button(
             button_frame,
             text="🔄 Reload",
             width=14,
             command=self.on_reload,
-            font=("Segoe UI", 12),
-            bg=BG_SECONDARY,
-            fg=TEXT_PRIMARY,
-            activebackground=BORDER_DARK,
-            activeforeground=TEXT_PRIMARY,
-            disabledforeground=TEXT_PRIMARY,
-            borderwidth=0,
-            relief="flat",
-            cursor="hand2",
-            highlightthickness=0,
-            highlightcolor=BG_SECONDARY,
+            style="Primary.TButton",
         )
         reload_button.grid(row=0, column=2, padx=8, pady=8)
 
-        close_button = tk.Button(
+        close_button = ttk.Button(
             button_frame,
             text="✖️  Close",
             width=14,
             command=self.destroy,
-            font=("Segoe UI", 12),
-            bg=BG_SECONDARY,
-            fg=TEXT_PRIMARY,
-            activebackground=BORDER_DARK,
-            activeforeground=TEXT_PRIMARY,
-            disabledforeground=TEXT_PRIMARY,
-            borderwidth=0,
-            relief="flat",
-            cursor="hand2",
-            highlightthickness=0,
-            highlightcolor=BG_SECONDARY,
+            style="Primary.TButton",
         )
         close_button.grid(row=0, column=3, padx=8, pady=8)
 
