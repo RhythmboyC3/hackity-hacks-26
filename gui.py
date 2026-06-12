@@ -48,7 +48,7 @@ def save_data(values):
 class TimetableApp(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("NAIS Hacks 26")
+        self.title("Student Study Assistant")
         self.geometry("1000x600")
         self.configure(bg=BG_DARK)
         self.resizable(False, False)
@@ -144,7 +144,7 @@ class TimetableApp(tk.Tk):
         creds = tk.Label(card, text="CruzW, EuniceF", font=("Jetbrains Mono", 10, "bold"), bg=CARD_DARK, fg=TEXT_PRIMARY)
         creds.pack(pady=(120, 12))
 
-        team = tk.Label(card, text="Rhythm League", font=("Jetbrains Mono", 12, "bold"), bg=CARD_DARK, fg=TEXT_PRIMARY)
+        team = tk.Label(card, text="NAISHK Hacks 26", font=("Jetbrains Mono", 12, "bold"), bg=CARD_DARK, fg=TEXT_PRIMARY)
         team.pack(pady=(50, 12))
 
     def _build_editor_screen(self):
@@ -155,7 +155,7 @@ class TimetableApp(tk.Tk):
 
         back_button = ttk.Button(
             header_frame,
-            text="← Back to Menu",
+            text="Back to Menu",
             width=14,
             command=lambda: self.show_frame("menu"),
             style="Primary.TButton",
@@ -164,8 +164,8 @@ class TimetableApp(tk.Tk):
 
         title_label = tk.Label(
             header_frame,
-            text="📋 Timetable Editor",
-            font=("Segoe UI", 22, "bold"),
+            text="Timetable Editor",
+            font=("Jetbrains Mono", 22, "bold"),
             bg=BG_DARK,
             fg=TEXT_PRIMARY,
         )
@@ -173,8 +173,8 @@ class TimetableApp(tk.Tk):
 
         info_label = tk.Label(
             frame,
-            text="Edit the cells directly and save when ready.",
-            font=("Segoe UI", 11),
+            text="Click to edit your timetable. Save your changes!",
+            font=("Jetbrains Mono", 11),
             bg=BG_DARK,
             fg=TEXT_SECONDARY,
         )
@@ -185,6 +185,7 @@ class TimetableApp(tk.Tk):
 
         self._build_table(table_card)
         self._build_buttons(frame)
+        self._refresh_table_values()
 
         self.frames["editor"] = frame
 
@@ -196,16 +197,18 @@ class TimetableApp(tk.Tk):
         table_frame = tk.Frame(parent, bg=CARD_DARK)
         table_frame.pack(fill="both", expand=True, padx=12, pady=12)
 
-        # Configure column weights for even distribution
+        # Configure column and row weights for even distribution
         for col in range(len(DAYS)):
             table_frame.grid_columnconfigure(col, weight=1)
+        for row in range(len(self.data_frame) + 1):
+            table_frame.grid_rowconfigure(row, weight=1)
 
         # Header row
         for col, day in enumerate(DAYS):
             label = tk.Label(
                 table_frame,
                 text=day,
-                font=("Segoe UI", 11, "bold"),
+                font=("Jetbrains Mono", 11, "bold"),
                 bg=BG_SECONDARY,
                 fg=ACCENT,
                 borderwidth=1,
@@ -225,7 +228,7 @@ class TimetableApp(tk.Tk):
                 entry = tk.Entry(
                     table_frame,
                     textvariable=string_var,
-                    font=("Segoe UI", 11),
+                    font=("Jetbrains Mono", 11),
                     relief="solid",
                     bd=1,
                     bg=BG_SECONDARY,
@@ -245,7 +248,7 @@ class TimetableApp(tk.Tk):
 
         save_button = ttk.Button(
             button_frame,
-            text="💾 Save",
+            text="Save",
             width=14,
             command=self.on_save,
             style="Primary.TButton",
@@ -254,7 +257,7 @@ class TimetableApp(tk.Tk):
 
         clear_button = ttk.Button(
             button_frame,
-            text="🗑️  Clear All",
+            text="Clear All",
             width=14,
             command=self.on_clear,
             style="Danger.TButton",
@@ -263,7 +266,7 @@ class TimetableApp(tk.Tk):
 
         reload_button = ttk.Button(
             button_frame,
-            text="🔄 Reload",
+            text="Reload",
             width=14,
             command=self.on_reload,
             style="Primary.TButton",
@@ -272,7 +275,7 @@ class TimetableApp(tk.Tk):
 
         close_button = ttk.Button(
             button_frame,
-            text="✖️  Close",
+            text="Quit",
             width=14,
             command=self.destroy,
             style="Primary.TButton",
@@ -285,6 +288,7 @@ class TimetableApp(tk.Tk):
         for frame in self.frames.values():
             frame.pack_forget()
         self.frames[name].pack(fill="both", expand=True)
+        self.frames[name].update_idletasks()
 
     def _refresh_table_values(self):
         self.data_frame = load_data()
@@ -295,10 +299,10 @@ class TimetableApp(tk.Tk):
     def on_save(self):
         values = [[cell.get().strip() for cell in row] for row in self.cells]
         save_data(values)
-        messagebox.showinfo("Saved", "Timetable saved to timetabledata.csv")
+        messagebox.showinfo("SAVED", "Timetable Saved Successfully!")
 
     def on_clear(self):
-        if not messagebox.askyesno("Clear All", "Really clear the whole timetable?"):
+        if not messagebox.askyesno("CLEAR ALL", "This will clear your data, which cannot be undone."):
             return
 
         for row_vars in self.cells:
@@ -309,10 +313,10 @@ class TimetableApp(tk.Tk):
 
     def on_reload(self):
         self._refresh_table_values()
-        messagebox.showinfo("Reloaded", "Timetable reloaded from timetabledata.csv")
+        messagebox.showinfo("RELOADED", "Timetable Reloaded!")
 
     def on_other_feature(self):
-        messagebox.showinfo("Coming Soon", "This area is reserved for future features.")
+        messagebox.showinfo("UNDER DEVELOPMENT", "Planned Pomodoro timer would be plugged here.")
 
 
 def launch_tkinter_gui():
