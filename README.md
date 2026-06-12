@@ -3,7 +3,7 @@ This is the Tkinter expansion of the original. Pretty jank, but needs to comply 
 ## The base version, as I like this one way more :D :D
 
 ```bash
-python main.py
+python3 main.py
 ```
 
 Input 1 for my classic terminal cool type UI, or press 2 for the Tkinter UI (Judges please judge both I love to the Terminal one)
@@ -11,7 +11,7 @@ Input 1 for my classic terminal cool type UI, or press 2 for the Tkinter UI (Jud
 ## The GUI version, launch this to eliminate need of the terminal entirely
 
 ```bash
-python gui.py
+python3 gui.py
 ```
 
 ## CSV
