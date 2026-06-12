@@ -48,7 +48,7 @@ def save_data(values):
 class TimetableApp(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("Timetable Editor")
+        self.title("NAIS Hacks 26")
         self.geometry("1000x600")
         self.configure(bg=BG_DARK)
         self.resizable(False, False)
@@ -104,26 +104,16 @@ class TimetableApp(tk.Tk):
         card = tk.Frame(frame, bg=CARD_DARK, bd=1, relief="solid", highlightbackground=BORDER_DARK, highlightthickness=1)
         card.pack(fill="both", expand=True, padx=16, pady=16)
 
-        title = tk.Label(card, text="Main Menu", font=("Segoe UI", 28, "bold"), bg=CARD_DARK, fg=TEXT_PRIMARY)
+        title = tk.Label(card, text="Main Menu", font=("Jetbrains Mono", 28, "bold"), bg=CARD_DARK, fg=TEXT_PRIMARY)
         title.pack(pady=(28, 12))
 
-        subtitle = tk.Label(
-            card,
-            text="Launch the timetable editor or explore upcoming features.",
-            font=("Segoe UI", 12),
-            bg=CARD_DARK,
-            fg=TEXT_SECONDARY,
-            wraplength=600,
-            justify="center",
-        )
-        subtitle.pack(pady=(0, 28))
 
         button_frame = tk.Frame(card, bg=CARD_DARK)
         button_frame.pack(pady=(0, 24))
 
         timetable_button = ttk.Button(
             button_frame,
-            text="📅 Open Timetable Editor",
+            text="Open Timetable Editor",
             width=28,
             command=lambda: self.show_frame("editor"),
             style="Primary.TButton",
@@ -132,7 +122,7 @@ class TimetableApp(tk.Tk):
 
         other_button = ttk.Button(
             button_frame,
-            text="⚙️  Other Features (coming soon)",
+            text="Other Features (coming soon)",
             width=28,
             command=self.on_other_feature,
             style="Primary.TButton",
@@ -141,7 +131,7 @@ class TimetableApp(tk.Tk):
 
         quit_button = ttk.Button(
             button_frame,
-            text="❌ Quit",
+            text="Quit",
             width=28,
             command=self.destroy,
             style="Primary.TButton",
@@ -149,6 +139,13 @@ class TimetableApp(tk.Tk):
         quit_button.pack(pady=(16, 0))
 
         self.frames["menu"] = frame
+
+
+        creds = tk.Label(card, text="CruzW, EuniceF", font=("Jetbrains Mono", 10, "bold"), bg=CARD_DARK, fg=TEXT_PRIMARY)
+        creds.pack(pady=(120, 12))
+
+        team = tk.Label(card, text="Rhythm League", font=("Jetbrains Mono", 12, "bold"), bg=CARD_DARK, fg=TEXT_PRIMARY)
+        team.pack(pady=(50, 12))
 
     def _build_editor_screen(self):
         frame = tk.Frame(self.container, bg=BG_DARK)
