@@ -1,37 +1,22 @@
-# Timetable Editor
+This is the Tkinter expansion of the original. Pretty jank, but needs to comply to rules so yea
 
-This project keeps the original terminal timetable UI and adds a new Tkinter GUI editor that shares the same CSV data.
-
-## Run the terminal version
+## The base version, as I like this one way more :D :D
 
 ```bash
 python main.py
 ```
 
-Then choose option `1` for the terminal timetable interface.
+Input 1 for my classic terminal cool type UI, or press 2 for the Tkinter UI (Judges please judge both I love to the Terminal one)
 
-## Run the Tkinter GUI version
-
-```bash
-python main.py
-```
-
-Then choose option `2` to open the GUI and use the in-app main menu for the timetable editor.
-You can also run the GUI directly:
+## The GUI version, launch this to eliminate need of the terminal entirely
 
 ```bash
 python gui.py
 ```
 
-## Data file
+## CSV
 
-The timetable is stored in `timetabledata.csv`.
-Changes made in either the terminal UI or the GUI are saved to the same file.
+All data is stored in the timetabledata.csv csv file. Please make sure that exists before running, else bad things will happen.
 
-## Notes
-
-- The terminal mode supports viewing, editing, and clearing the timetable.
-- The GUI mode offers a grid editor with Save, Clear All, Reload, and Close buttons.
-- The GUI code is kept in `gui.py` so it is simple to expand from there.
-
-Please wait.
+Updates will roll out slowly. Please wait.
+My mental health is already shattered beyond repair :(
