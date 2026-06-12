@@ -4,6 +4,12 @@ from unittest import case
 import pandas as pd 
 from time import sleep
 
+from tkinter import *
+root = Tk()
+root.geometry('600x600')
+root.title("timetable")
+root.mainloop()
+
 # Notes:
 # If you intend to call another function, return or else the 1st function still runs
 
