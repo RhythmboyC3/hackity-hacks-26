@@ -77,7 +77,7 @@ def handle_input():
                 print("You sure? Input c again to clear, or any other key to cancel.")
                 if str(input("> ")).lower() == "c":
                     print("Clearing...")
-                    sleep(1)
+                    sleep(0)
                     pd.DataFrame(blank_timetable()).to_csv(CSV_PATH, index=False)
                     timetabledata = load_timetable()
                     clear_terminal()
@@ -201,10 +201,10 @@ def edit_mode_UI():
                     print_timetable(temp)
                     print("Saving...")
                     timetabledata.iat[row_index, col_idx] = textinput
-                    sleep(1)
+                    sleep(0)
                     print("Saved!")
                     edited = True
-                    sleep(1)
+                    sleep(0)
                     clear_terminal()
                     save_timetable(timetabledata)
                     handle_input()
@@ -245,17 +245,17 @@ def main_menu():
             case "2":
                 if gui_available:
                     print("Opening Tkinter GUI...")
-                    sleep(1)
+                    sleep(0)
                     launch_tkinter_gui()
                     return
                 clear_terminal()
                 print("Tkinter GUI is not available in this environment.")
-                sleep(1)
+                sleep(0)
                 continue
             case "q":
                 print("Saving...")
                 save_timetable(timetabledata)
-                sleep(1)
+                sleep(0)
                 print("Bye!")
                 quit()
             case _:

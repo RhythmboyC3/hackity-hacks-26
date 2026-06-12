@@ -22,6 +22,7 @@ TEXT_SECONDARY = "#cbd5e1"
 PRIMARY = "#3b82f6"
 PRIMARY_HOVER = "#2563eb"
 ACCENT = "#10b981"
+BUTTONBG = "#606060"
 DANGER = "#ef4444"
 
 
@@ -59,7 +60,7 @@ class TimetableApp(tk.Tk):
             pass
         self.style.configure(
             "Primary.TButton",
-            background=BG_SECONDARY,
+            background=BUTTONBG,
             foreground=TEXT_PRIMARY,
             borderwidth=0,
             focusthickness=0,
@@ -319,6 +320,7 @@ class TimetableApp(tk.Tk):
 
 def launch_tkinter_gui():
     app = TimetableApp()
+    app.resizable(True, True)
     app.mainloop()
 
 
