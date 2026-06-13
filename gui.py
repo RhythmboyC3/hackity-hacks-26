@@ -8,22 +8,24 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 import pandas as pd
 
+
+
 CSV_PATH = "timetabledata.csv"
 DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 ROW_COUNT = 5
 
 # Dark Mode Color Palette
-BG_DARK = "#0f172a"
-BG_SECONDARY = "#1e293b"
-CARD_DARK = "#1e293b"
-BORDER_DARK = "#334155"
-TEXT_PRIMARY = "#f1f5f9"
-TEXT_SECONDARY = "#cbd5e1"
-PRIMARY = "#3b82f6"
-PRIMARY_HOVER = "#2563eb"
+BG_DARK = "#1e1e1e"
+BG_SECONDARY = "#252526"
+CARD_DARK = "#2d2d2d"
+BORDER_DARK = "#3c3c3c"
+TEXT_PRIMARY = "#ffffff"
+TEXT_SECONDARY = "#c5c6c7"
+PRIMARY = "#007acc"
+PRIMARY_HOVER = "#005999"
 ACCENT = "#10b981"
-BUTTONBG = "#606060"
-DANGER = "#ef4444"
+BUTTONBG = "#007acc"
+DANGER = "#d9534f"
 
 
 def load_data():
@@ -58,32 +60,29 @@ class TimetableApp(tk.Tk):
             self.style.theme_use("clam")
         except tk.TclError:
             pass
+        self.style.configure("TLabel", background=BG_DARK, foreground=TEXT_PRIMARY, font=("Segoe UI", 11))
         self.style.configure(
             "Primary.TButton",
-            background=BUTTONBG,
+            background=PRIMARY,
             foreground=TEXT_PRIMARY,
+            font=("Segoe UI", 10, "bold"),
             borderwidth=0,
-            focusthickness=0,
             padding=8,
         )
-        self.style.map(
-            "Primary.TButton",
-            background=[("active", BORDER_DARK), ("disabled", BG_SECONDARY)],
-            foreground=[("disabled", TEXT_PRIMARY)],
-        )
+        self.style.map("Primary.TButton", background=[("active", PRIMARY_HOVER)])
         self.style.configure(
             "Danger.TButton",
-            background="#7f1d1d",
+            background=DANGER,
             foreground=TEXT_PRIMARY,
+            font=("Segoe UI", 10, "bold"),
             borderwidth=0,
-            focusthickness=0,
             padding=8,
         )
-        self.style.map(
-            "Danger.TButton",
-            background=[("active", "#991b1b"), ("disabled", "#7f1d1d")],
-            foreground=[("disabled", TEXT_PRIMARY)],
-        )
+        self.style.map("Danger.TButton", background=[("active", "#a94442")])
+        self.style.configure("MenuTitle.TLabel", background=CARD_DARK, foreground=TEXT_PRIMARY, font=("Segoe UI", 26, "bold"))
+        self.style.configure("Header.TLabel", background=BG_DARK, foreground=TEXT_PRIMARY, font=("Segoe UI", 22, "bold"))
+        self.style.configure("Info.TLabel", background=BG_DARK, foreground=TEXT_SECONDARY, font=("Segoe UI", 11))
+        self.style.configure("CardSubtitle.TLabel", background=CARD_DARK, foreground=TEXT_SECONDARY, font=("Segoe UI", 10))
 
         self.cells = []
         self.data_frame = load_data()
@@ -104,9 +103,8 @@ class TimetableApp(tk.Tk):
         card = tk.Frame(frame, bg=CARD_DARK, bd=1, relief="solid", highlightbackground=BORDER_DARK, highlightthickness=1)
         card.pack(fill="both", expand=True, padx=16, pady=16)
 
-        title = tk.Label(card, text="Main Menu", font=("Jetbrains Mono", 28, "bold"), bg=CARD_DARK, fg=TEXT_PRIMARY)
+        title = ttk.Label(card, text="Main Menu", style="MenuTitle.TLabel")
         title.pack(pady=(28, 12))
-
 
         button_frame = tk.Frame(card, bg=CARD_DARK)
         button_frame.pack(pady=(0, 24))
@@ -141,10 +139,10 @@ class TimetableApp(tk.Tk):
         self.frames["menu"] = frame
 
 
-        creds = tk.Label(card, text="CruzW, EuniceF", font=("Jetbrains Mono", 10, "bold"), bg=CARD_DARK, fg=TEXT_PRIMARY)
+        creds = ttk.Label(card, text="CruzW, EuniceF", style="CardSubtitle.TLabel")
         creds.pack(pady=(120, 12))
 
-        team = tk.Label(card, text="NAISHK Hacks 26", font=("Jetbrains Mono", 12, "bold"), bg=CARD_DARK, fg=TEXT_PRIMARY)
+        team = ttk.Label(card, text="NAISHK Hacks 26", style="CardSubtitle.TLabel")
         team.pack(pady=(50, 12))
 
     def _build_editor_screen(self):
@@ -162,22 +160,10 @@ class TimetableApp(tk.Tk):
         )
         back_button.pack(side="left")
 
-        title_label = tk.Label(
-            header_frame,
-            text="Timetable Editor",
-            font=("Jetbrains Mono", 22, "bold"),
-            bg=BG_DARK,
-            fg=TEXT_PRIMARY,
-        )
+        title_label = ttk.Label(header_frame, text="Timetable Editor", style="Header.TLabel")
         title_label.pack(side="left", padx=16)
 
-        info_label = tk.Label(
-            frame,
-            text="Click to edit your timetable. Save your changes!",
-            font=("Jetbrains Mono", 11),
-            bg=BG_DARK,
-            fg=TEXT_SECONDARY,
-        )
+        info_label = ttk.Label(frame, text="Click to edit your timetable. Save your changes!", style="Info.TLabel")
         info_label.pack(pady=(0, 14))
 
         table_card = tk.Frame(frame, bg=CARD_DARK, bd=1, relief="solid", highlightbackground=BORDER_DARK, highlightthickness=1)
