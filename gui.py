@@ -21,10 +21,10 @@ CARD_DARK = "#2d2d2d"
 BORDER_DARK = "#3c3c3c"
 TEXT_PRIMARY = "#ffffff"
 TEXT_SECONDARY = "#c5c6c7"
-PRIMARY = "#007acc"
-PRIMARY_HOVER = "#005999"
+PRIMARY = "#676767"
+PRIMARY_HOVER = "#838383"
 ACCENT = "#10b981"
-BUTTONBG = "#007acc"
+BUTTONBG = "#969696"
 DANGER = "#d9534f"
 
 
@@ -53,36 +53,38 @@ class TimetableApp(tk.Tk):
         self.title("Student Study Assistant")
         self.geometry("1000x600")
         self.configure(bg=BG_DARK)
-        self.resizable(False, False)
+        self.resizable(True, True)
 
         self.style = ttk.Style(self)
         try:
             self.style.theme_use("clam")
         except tk.TclError:
             pass
-        self.style.configure("TLabel", background=BG_DARK, foreground=TEXT_PRIMARY, font=("Segoe UI", 11))
+        self.style.configure("TLabel", background=BG_DARK, foreground=TEXT_PRIMARY, font=("Jetbrains Mono", 11))
         self.style.configure(
             "Primary.TButton",
             background=PRIMARY,
             foreground=TEXT_PRIMARY,
-            font=("Segoe UI", 10, "bold"),
-            borderwidth=0,
-            padding=8,
+            font=("Jetbrains Mono", 10, "bold"),
+            borderwidth=4,
+            padding=12,
+            relief="raised",
         )
         self.style.map("Primary.TButton", background=[("active", PRIMARY_HOVER)])
         self.style.configure(
             "Danger.TButton",
             background=DANGER,
             foreground=TEXT_PRIMARY,
-            font=("Segoe UI", 10, "bold"),
-            borderwidth=0,
-            padding=8,
+            font=("Jetbrains Mono", 10, "bold"),
+            borderwidth=4,
+            padding=12,
+            relief="raised",
         )
         self.style.map("Danger.TButton", background=[("active", "#a94442")])
-        self.style.configure("MenuTitle.TLabel", background=CARD_DARK, foreground=TEXT_PRIMARY, font=("Segoe UI", 26, "bold"))
-        self.style.configure("Header.TLabel", background=BG_DARK, foreground=TEXT_PRIMARY, font=("Segoe UI", 22, "bold"))
-        self.style.configure("Info.TLabel", background=BG_DARK, foreground=TEXT_SECONDARY, font=("Segoe UI", 11))
-        self.style.configure("CardSubtitle.TLabel", background=CARD_DARK, foreground=TEXT_SECONDARY, font=("Segoe UI", 10))
+        self.style.configure("MenuTitle.TLabel", background=CARD_DARK, foreground=TEXT_PRIMARY, font=("Jetbrains Mono", 26, "bold"))
+        self.style.configure("Header.TLabel", background=BG_DARK, foreground=TEXT_PRIMARY, font=("Jetbrains Mono", 22, "bold"))
+        self.style.configure("Info.TLabel", background=BG_DARK, foreground=TEXT_SECONDARY, font=("Jetbrains Mono", 11))
+        self.style.configure("CardSubtitle.TLabel", background=CARD_DARK, foreground=TEXT_SECONDARY, font=("Jetbrains Mono", 10))
 
         self.cells = []
         self.data_frame = load_data()
@@ -93,57 +95,83 @@ class TimetableApp(tk.Tk):
         self.container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
+        self.button_references = {}  # Store button references for dynamic updates
         self._build_main_menu()
         self._build_editor_screen()
         self.show_frame("menu")
+        
+        # Bind window resize event for dynamic scaling
+        self.bind("<Configure>", self._on_window_resize)
 
     def _build_main_menu(self):
         frame = tk.Frame(self.container, bg=BG_DARK)
 
-        card = tk.Frame(frame, bg=CARD_DARK, bd=1, relief="solid", highlightbackground=BORDER_DARK, highlightthickness=1)
+        card = tk.Frame(frame, bg=CARD_DARK, bd=3, relief="solid", highlightbackground=BORDER_DARK, highlightthickness=1)
         card.pack(fill="both", expand=True, padx=16, pady=16)
 
         title = ttk.Label(card, text="Main Menu", style="MenuTitle.TLabel")
         title.pack(pady=(28, 12))
 
         button_frame = tk.Frame(card, bg=CARD_DARK)
-        button_frame.pack(pady=(0, 24))
+        button_frame.pack(pady=(0, 24), expand=True, fill="y")
 
         timetable_button = ttk.Button(
             button_frame,
             text="Open Timetable Editor",
-            width=28,
             command=lambda: self.show_frame("editor"),
             style="Primary.TButton",
         )
-        timetable_button.pack(pady=8)
+        timetable_button.pack(pady=8, expand=True, fill="both", padx=20)
+        self.button_references["timetable"] = timetable_button
 
         other_button = ttk.Button(
             button_frame,
             text="Other Features (coming soon)",
-            width=28,
             command=self.on_other_feature,
             style="Primary.TButton",
         )
-        other_button.pack(pady=8)
+        other_button.pack(pady=8, expand=True, fill="both", padx=20)
+        self.button_references["other"] = other_button
 
         quit_button = ttk.Button(
             button_frame,
             text="Quit",
-            width=28,
             command=self.destroy,
             style="Primary.TButton",
         )
-        quit_button.pack(pady=(16, 0))
+        quit_button.pack(pady=(16, 0), expand=True, fill="both", padx=20)
+        self.button_references["quit"] = quit_button
 
         self.frames["menu"] = frame
 
-
-        creds = ttk.Label(card, text="CruzW, EuniceF", style="CardSubtitle.TLabel")
+        creds = ttk.Label(card, text="CruzW EuniceF", style="CardSubtitle.TLabel")
         creds.pack(pady=(120, 12))
 
         team = ttk.Label(card, text="NAISHK Hacks 26", style="CardSubtitle.TLabel")
         team.pack(pady=(50, 12))
+
+    def _on_window_resize(self, event=None):
+        """Update button and text sizes dynamically based on window height."""
+        if event is None or "menu" not in self.frames:
+            return
+        
+        # Get current window height
+        window_height = self.winfo_height()
+        if window_height < 100:
+            return
+        
+        # Calculate dynamic font size based on window height (scale between 8 and 14)
+        button_font_size = max(8, min(14, int(window_height / 50)))
+        
+        # Update button styles dynamically
+        self.style.configure(
+            "Primary.TButton",
+            font=("Jetbrains Mono", button_font_size, "bold"),
+        )
+        self.style.configure(
+            "Danger.TButton",
+            font=("Jetbrains Mono", button_font_size, "bold"),
+        )
 
     def _build_editor_screen(self):
         frame = tk.Frame(self.container, bg=BG_DARK)
@@ -154,7 +182,6 @@ class TimetableApp(tk.Tk):
         back_button = ttk.Button(
             header_frame,
             text="Back to Menu",
-            width=14,
             command=lambda: self.show_frame("menu"),
             style="Primary.TButton",
         )
@@ -166,7 +193,7 @@ class TimetableApp(tk.Tk):
         info_label = ttk.Label(frame, text="Click to edit your timetable. Save your changes!", style="Info.TLabel")
         info_label.pack(pady=(0, 14))
 
-        table_card = tk.Frame(frame, bg=CARD_DARK, bd=1, relief="solid", highlightbackground=BORDER_DARK, highlightthickness=1)
+        table_card = tk.Frame(frame, bg=CARD_DARK, bd=3, relief="solid", highlightbackground=BORDER_DARK, highlightthickness=1)
         table_card.pack(fill="both", expand=True, padx=4, pady=(0, 18))
 
         self._build_table(table_card)
@@ -216,7 +243,7 @@ class TimetableApp(tk.Tk):
                     textvariable=string_var,
                     font=("Jetbrains Mono", 11),
                     relief="solid",
-                    bd=1,
+                    bd=3,
                     bg=BG_SECONDARY,
                     fg=TEXT_PRIMARY,
                     insertbackground=TEXT_PRIMARY,
@@ -235,7 +262,6 @@ class TimetableApp(tk.Tk):
         save_button = ttk.Button(
             button_frame,
             text="Save",
-            width=14,
             command=self.on_save,
             style="Primary.TButton",
         )
@@ -244,7 +270,6 @@ class TimetableApp(tk.Tk):
         clear_button = ttk.Button(
             button_frame,
             text="Clear All",
-            width=14,
             command=self.on_clear,
             style="Danger.TButton",
         )
@@ -253,7 +278,6 @@ class TimetableApp(tk.Tk):
         reload_button = ttk.Button(
             button_frame,
             text="Reload",
-            width=14,
             command=self.on_reload,
             style="Primary.TButton",
         )
@@ -262,7 +286,6 @@ class TimetableApp(tk.Tk):
         close_button = ttk.Button(
             button_frame,
             text="Quit",
-            width=14,
             command=self.destroy,
             style="Primary.TButton",
         )
