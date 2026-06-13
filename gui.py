@@ -135,7 +135,7 @@ class TimetableApp(tk.Tk):
 
         quit_button = ttk.Button(
             button_frame,
-            text="Quit",
+            text="Exit",
             command=self.destroy,
             style="Primary.TButton",
         )
@@ -221,7 +221,7 @@ class TimetableApp(tk.Tk):
             label = tk.Label(
                 table_frame,
                 text=day,
-                font=("Jetbrains Mono", 11, "bold"),
+                font=("Jetbrains Mono", 15, "bold"),
                 bg=BG_SECONDARY,
                 fg=ACCENT,
                 borderwidth=1,
@@ -243,7 +243,7 @@ class TimetableApp(tk.Tk):
                     textvariable=string_var,
                     font=("Jetbrains Mono", 11),
                     relief="solid",
-                    bd=3,
+                    bd=1,
                     bg=BG_SECONDARY,
                     fg=TEXT_PRIMARY,
                     insertbackground=TEXT_PRIMARY,
@@ -285,7 +285,7 @@ class TimetableApp(tk.Tk):
 
         close_button = ttk.Button(
             button_frame,
-            text="Quit",
+            text="Exit",
             command=self.destroy,
             style="Primary.TButton",
         )
