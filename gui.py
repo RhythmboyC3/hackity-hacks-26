@@ -8,6 +8,8 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 import pandas as pd
 
+from pomodoro_timer import PomodoroScreen, configure_styles
+
 
 
 CSV_PATH = "timetabledata.csv"
@@ -81,6 +83,7 @@ class TimetableApp(tk.Tk):
             relief="raised",
         )
         self.style.map("Danger.TButton", background=[("active", "#a94442")])
+        configure_styles(self.style)
         self.style.configure("MenuTitle.TLabel", background=CARD_DARK, foreground=TEXT_PRIMARY, font=("Jetbrains Mono", 26, "bold"))
         self.style.configure("Header.TLabel", background=BG_DARK, foreground=TEXT_PRIMARY, font=("Jetbrains Mono", 22, "bold"))
         self.style.configure("Info.TLabel", background=BG_DARK, foreground=TEXT_SECONDARY, font=("Jetbrains Mono", 11))
@@ -98,6 +101,7 @@ class TimetableApp(tk.Tk):
         self.button_references = {}  # Store button references for dynamic updates
         self._build_main_menu()
         self._build_editor_screen()
+        self._build_pomodoro_screen()
         self.show_frame("menu")
         
         # Bind window resize event for dynamic scaling
@@ -126,8 +130,8 @@ class TimetableApp(tk.Tk):
 
         other_button = ttk.Button(
             button_frame,
-            text="Other Features (coming soon)",
-            command=self.on_other_feature,
+            text="Pomodoro Timer",
+            command=lambda: self.show_frame("pomodoro"),
             style="Primary.TButton",
         )
         other_button.pack(pady=8, expand=True, fill="both", padx=20)
@@ -172,6 +176,10 @@ class TimetableApp(tk.Tk):
             "Danger.TButton",
             font=("Jetbrains Mono", button_font_size, "bold"),
         )
+        self.style.configure(
+            "Timer.TLabel",
+            font=("Jetbrains Mono", max(32, min(72, int(window_height / 8))), "bold"),
+        )
 
     def _build_editor_screen(self):
         frame = tk.Frame(self.container, bg=BG_DARK)
@@ -201,6 +209,10 @@ class TimetableApp(tk.Tk):
         self._refresh_table_values()
 
         self.frames["editor"] = frame
+
+    def _build_pomodoro_screen(self):
+        frame = PomodoroScreen(self.container, on_back=lambda: self.show_frame("menu"))
+        self.frames["pomodoro"] = frame
 
     def _build_table(self, parent):
         self.cells = []
@@ -323,10 +335,6 @@ class TimetableApp(tk.Tk):
     def on_reload(self):
         self._refresh_table_values()
         messagebox.showinfo("RELOADED", "Timetable Reloaded!")
-
-    def on_other_feature(self):
-        messagebox.showinfo("UNDER DEVELOPMENT", "Planned Pomodoro timer would be plugged here.")
-
 
 def launch_tkinter_gui():
     app = TimetableApp()
